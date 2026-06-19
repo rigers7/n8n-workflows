@@ -1,0 +1,861 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "InsightFlow Supabase Executive Query",
+        "formDescription": "Select what you want to check. The workflow reads approved data from Supabase tables, generates a chart, writes an executive summary, and emails the insight snapshot.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Analysis Area",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Business"
+                  },
+                  {
+                    "option": "Customer Support"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Question",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Did revenue improve or decline?"
+                  },
+                  {
+                    "option": "Where are customers least satisfied?"
+                  },
+                  {
+                    "option": "Which country did most revenues?"
+                  },
+                  {
+                    "option": "Which category of customer inquiries causes most problems?"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Time Period",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Yesterday"
+                  },
+                  {
+                    "option": "Last Week"
+                  },
+                  {
+                    "option": "Last month"
+                  },
+                  {
+                    "option": "All data"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Email",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        480,
+        2304
+      ],
+      "id": "ba661328-39fc-4850-8c1d-be49735e8fba",
+      "name": "On form submission"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Analysis Area'] }}",
+                    "rightValue": "Business",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a4117146-fc8e-46dd-83b1-6b04382ab8fc"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "32c24110-c5c8-4353-a984-0efde0a4154c",
+                    "leftValue": "={{ $json['Analysis Area'] }}",
+                    "rightValue": "Customer Support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        2288
+      ],
+      "id": "06959831-10e8-4dc1-8f95-98427358de98",
+      "name": "Route by Analysis Area"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('On form submission').item.json.Question }}",
+                    "rightValue": "Did revenue improve or decline?",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "567cfafb-bfd1-46d2-8588-d6faae13d5de"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2a20e822-9311-41ff-9457-bd76d689b934",
+                    "leftValue": "={{ $('On form submission').item.json.Question }}",
+                    "rightValue": "Which country did most revenues?",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        1936
+      ],
+      "id": "74c8f149-a25c-440c-a305-7819e9f19c9f",
+      "name": "Route Business Question"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('On form submission').item.json.Question }}",
+                    "rightValue": "Where are customers least satisfied?",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "567cfafb-bfd1-46d2-8588-d6faae13d5de"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2a20e822-9311-41ff-9457-bd76d689b934",
+                    "leftValue": "={{ $('On form submission').item.json.Question }}",
+                    "rightValue": "Which category of customer inquiries causes most problems?",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        2288
+      ],
+      "id": "4d70215b-f39f-4be4-8d25-3839932d92ce",
+      "name": "Route Support Question"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1be4517e-23fb-421d-8b9a-771ab0f0b7e7",
+              "name": "chart_config",
+              "value": "={{ JSON.stringify({\n  type: $json.chart_type || 'bar',\n  data: {\n    labels: $json.chart_labels,\n    datasets: [\n      {\n        label: $json.metric_label || 'Value',\n        data: $json.chart_values\n      }\n    ]\n  },\n  options: {\n    plugins: {\n      title: {\n        display: true,\n        text: $json.title || $json.analysis || 'Insight Snapshot'\n      }\n    },\n    scales: {\n      y: {\n        beginAtZero: true\n      }\n    }\n  }\n}) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1952,
+        2112
+      ],
+      "id": "aaa94e1d-9fa5-4b87-9470-702a1bcd38fe",
+      "name": "Build Chart Config"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1d2e3f4-a5b6-47c8-9d0e-1f2a3b4c5d6e",
+              "leftValue": "={{ $json.chart_values ? $json.chart_values.length : 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2144,
+        2112
+      ],
+      "id": "7fee2d97-8748-4ac9-98e9-53001a2cc4de",
+      "name": "Check For Data"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://quickchart.io/chart/create",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chart",
+              "value": "={{$json.chart_config}}"
+            },
+            {
+              "name": "width",
+              "value": "800"
+            },
+            {
+              "name": "height",
+              "value": "500"
+            },
+            {
+              "name": "format",
+              "value": "png"
+            },
+            {
+              "name": "backgroundColor",
+              "value": "white"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2384,
+        1984
+      ],
+      "id": "8327216c-e508-41cc-92d7-75ed1cbaf515",
+      "name": "Generate Chart Image"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an executive insight summary based on this Supabase database analysis.\n\nSource table:\n{{ $('Build Chart Config').item.json.source_table || 'Supabase' }}\n\nAnalysis type:\n{{ $('Build Chart Config').item.json.analysis }}\n\nTitle:\n{{ $('Build Chart Config').item.json.title }}\n\nTime period analyzed:\n{{ $('Build Chart Config').item.json.time_period }}\n\nMain insight:\n{{ $('Build Chart Config').item.json.insight }}\n\nDetailed data:\n{{ JSON.stringify($('Build Chart Config').item.json.ranking || {}) }}\n\nChart URL:\n{{ $json.url }}\n\nReturn this structure in clean HTML:\n\n<h2>Executive Insight Snapshot</h2>\n\n<p><strong>Main message:</strong> ...</p>\n\n<p><strong>What happened:</strong> ...</p>\n\n<p><strong>Why it matters:</strong> ...</p>\n\n<p><strong>Recommended action:</strong> ...</p>\n\n<img src=\"{{ $json.url }}\" width=\"700\">",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an executive business analyst.  Your job is to turn structured KPI results into a short, manager-friendly insight.  Rules: - Be concise and clear. - Do not over-explain. - Do not invent numbers. - Use only the provided data. - Mention whether the result is good, bad, or needs attention. - Write for a non-technical manager. - Output in clean HTML for email/Teams."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2640,
+        1984
+      ],
+      "id": "a973dc6f-ac23-498f-8e30-332807ca467e",
+      "name": "Write Executive Summary"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2640,
+        2160
+      ],
+      "id": "5b27fbed-2b79-4779-a919-8669f1c4c046",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "Your InsightFlow Supabase Analysis",
+        "message": "=Here is your analysis:\n\n{{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3024,
+        1984
+      ],
+      "id": "687a1d57-1d3e-4258-b13b-68e471f908b0",
+      "name": "Send Insight Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "InsightFlow Supabase - No Data Found",
+        "message": "=Hi,\n\nWe couldn't find Supabase data for your request:\n\nAnalysis: {{ $json.analysis }}\nSource table: {{ $json.source_table || 'Supabase' }}\nTime period: {{ $json.time_period }}\n\n{{ $json.insight }}\n\nTry a different time period, or confirm that the Supabase table contains the expected rows.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        2256
+      ],
+      "id": "04f3a08c-11b2-4bca-ab5b-8ebfd6aeb21b",
+      "name": "Send No-Data Email"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3c4d5e6-f7a8-4901-b2c3-d4e5f6a7b8c9",
+              "name": "insight",
+              "value": "=We could not match your selection to an available analysis. You selected Area: \"{{ $('On form submission').item.json['Analysis Area'] }}\", Question: \"{{ $('On form submission').item.json.Question }}\", Time Period: \"{{ $('On form submission').item.json['Time Period'] }}\". Please choose one of the listed options and try again.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        2688
+      ],
+      "id": "89980aa4-6744-4543-a36f-ca6503450350",
+      "name": "Unhandled Selection"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "InsightFlow - No Matching Analysis",
+        "message": "={{ $json.insight }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1584,
+        2688
+      ],
+      "id": "5b0e1e3a-6e8d-498c-ac5c-b60b7fe16cdc",
+      "name": "Send Unhandled Selection Email"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH params AS (\n  SELECT '{{ $('On form submission').item.json['Time Period'] }}'::text AS time_period\n),\nref AS (\n  SELECT max(sale_date)::date AS ref_date\n  FROM public.business_revenue\n),\nperiods AS (\n  SELECT\n    p.time_period,\n    r.ref_date,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN r.ref_date\n      WHEN p.time_period = 'Last Week' THEN r.ref_date - 6\n      WHEN p.time_period = 'Last month' THEN r.ref_date - 29\n      ELSE r.ref_date\n    END::date AS current_start,\n    r.ref_date::date AS current_end,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN r.ref_date - 1\n      WHEN p.time_period = 'Last Week' THEN r.ref_date - 13\n      WHEN p.time_period = 'Last month' THEN r.ref_date - 59\n      ELSE (\n        SELECT max(sale_date)::date\n        FROM public.business_revenue\n        WHERE sale_date < r.ref_date\n      )\n    END::date AS previous_start,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN r.ref_date - 1\n      WHEN p.time_period = 'Last Week' THEN r.ref_date - 7\n      WHEN p.time_period = 'Last month' THEN r.ref_date - 30\n      ELSE (\n        SELECT max(sale_date)::date\n        FROM public.business_revenue\n        WHERE sale_date < r.ref_date\n      )\n    END::date AS previous_end,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN 'the latest available day vs. the previous day'\n      WHEN p.time_period = 'Last Week' THEN 'the latest 7 days vs. the previous 7 days'\n      WHEN p.time_period = 'Last month' THEN 'the latest 30 days vs. the previous 30 days'\n      ELSE 'the two most recent dates in the database'\n    END AS comparison_basis\n  FROM params p\n  CROSS JOIN ref r\n),\nsums AS (\n  SELECT\n    p.*,\n    COALESCE((\n      SELECT sum(revenue)\n      FROM public.business_revenue\n      WHERE sale_date BETWEEN p.current_start AND p.current_end\n    ), 0)::numeric AS latest_revenue,\n    COALESCE((\n      SELECT sum(revenue)\n      FROM public.business_revenue\n      WHERE sale_date BETWEEN p.previous_start AND p.previous_end\n    ), 0)::numeric AS previous_revenue\n  FROM periods p\n),\ncalc AS (\n  SELECT\n    *,\n    latest_revenue - previous_revenue AS change,\n    CASE\n      WHEN latest_revenue - previous_revenue > 0 THEN 'increased'\n      WHEN latest_revenue - previous_revenue < 0 THEN 'decreased'\n      ELSE 'stayed flat'\n    END AS direction,\n    CASE\n      WHEN previous_revenue = 0 THEN NULL\n      ELSE round(((latest_revenue - previous_revenue) / previous_revenue) * 100, 2)\n    END AS percentage_change\n  FROM sums\n),\ndaily AS (\n  SELECT\n    br.sale_date,\n    sum(br.revenue)::numeric AS total_revenue\n  FROM public.business_revenue br\n  CROSS JOIN calc c\n  WHERE\n    c.ref_date IS NOT NULL\n    AND c.previous_start IS NOT NULL\n    AND br.sale_date BETWEEN c.previous_start AND c.current_end\n  GROUP BY br.sale_date\n)\nSELECT\n  CASE\n    WHEN c.ref_date IS NULL THEN 'no_data'\n    WHEN c.previous_start IS NULL THEN 'not_enough_data'\n    ELSE NULL\n  END AS status,\n  'business_revenue' AS source_table,\n  'Revenue change' AS analysis,\n  'Revenue Trend' AS title,\n  'line' AS chart_type,\n  'Revenue' AS metric_label,\n  c.time_period,\n  CASE\n    WHEN c.ref_date IS NULL THEN\n      'No revenue data was found in the business_revenue table.'\n    WHEN c.previous_start IS NULL THEN\n      'Not enough revenue dates were found to compare revenue.'\n    WHEN c.percentage_change IS NULL THEN\n      'Revenue ' || c.direction || ' comparing ' || c.comparison_basis || '. Previous revenue was 0, so percentage change is not available.'\n    ELSE\n      'Revenue ' || c.direction || ' by ' || c.percentage_change || '% comparing ' || c.comparison_basis || '.'\n  END AS insight,\n  CASE\n    WHEN c.ref_date IS NULL OR c.previous_start IS NULL THEN '[]'::jsonb\n    ELSE COALESCE(to_jsonb(array_agg(to_char(d.sale_date, 'YYYY-MM-DD') ORDER BY d.sale_date)), '[]'::jsonb)\n  END AS chart_labels,\n  CASE\n    WHEN c.ref_date IS NULL OR c.previous_start IS NULL THEN '[]'::jsonb\n    ELSE COALESCE(to_jsonb(array_agg(d.total_revenue ORDER BY d.sale_date)), '[]'::jsonb)\n  END AS chart_values,\n  jsonb_build_object(\n    'comparison_basis', c.comparison_basis,\n    'previous_revenue', c.previous_revenue,\n    'latest_revenue', c.latest_revenue,\n    'change', c.change,\n    'percentage_change', c.percentage_change,\n    'direction', c.direction\n  ) AS ranking\nFROM calc c\nLEFT JOIN daily d ON true\nGROUP BY\n  c.ref_date,\n  c.previous_start,\n  c.time_period,\n  c.comparison_basis,\n  c.previous_revenue,\n  c.latest_revenue,\n  c.change,\n  c.percentage_change,\n  c.direction;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1584,
+        1856
+      ],
+      "id": "d57f94d7-c772-4c0a-88fe-2f31c6427dfd",
+      "name": "SQL - Revenue Trend"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH params AS (\n  SELECT '{{ $('On form submission').item.json['Time Period'] }}'::text AS time_period\n),\nref AS (\n  SELECT max(sale_date)::date AS ref_date\n  FROM public.business_revenue\n),\nperiods AS (\n  SELECT\n    p.time_period,\n    r.ref_date,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN r.ref_date\n      WHEN p.time_period = 'Last Week' THEN r.ref_date - 6\n      WHEN p.time_period = 'Last month' THEN r.ref_date - 29\n      ELSE NULL\n    END::date AS start_date,\n    CASE\n      WHEN p.time_period IN ('Yesterday', 'Last Week', 'Last month') THEN r.ref_date\n      ELSE NULL\n    END::date AS end_date\n  FROM params p\n  CROSS JOIN ref r\n),\nranked AS (\n  SELECT\n    br.country,\n    round(sum(br.revenue), 2)::numeric AS revenue\n  FROM public.business_revenue br\n  CROSS JOIN periods p\n  WHERE\n    p.time_period = 'All data'\n    OR br.sale_date BETWEEN p.start_date AND p.end_date\n  GROUP BY br.country\n),\nordered_ranked AS (\n  SELECT *\n  FROM ranked\n  ORDER BY revenue DESC, country ASC\n),\nagg AS (\n  SELECT\n    count(*) AS row_count,\n    COALESCE(to_jsonb(array_agg(country ORDER BY revenue DESC, country ASC)), '[]'::jsonb) AS labels,\n    COALESCE(to_jsonb(array_agg(revenue ORDER BY revenue DESC, country ASC)), '[]'::jsonb) AS values,\n    COALESCE(\n      jsonb_agg(\n        jsonb_build_object(\n          'country', country,\n          'revenue', revenue\n        )\n        ORDER BY revenue DESC, country ASC\n      ),\n      '[]'::jsonb\n    ) AS ranking\n  FROM ordered_ranked\n),\ntop_row AS (\n  SELECT country, revenue\n  FROM ordered_ranked\n  LIMIT 1\n)\nSELECT\n  CASE WHEN a.row_count = 0 THEN 'no_data' ELSE NULL END AS status,\n  'business_revenue' AS source_table,\n  'Top revenue country' AS analysis,\n  'Revenue by Country' AS title,\n  'bar' AS chart_type,\n  'Revenue' AS metric_label,\n  p.time_period,\n  CASE\n    WHEN a.row_count = 0 THEN\n      'No revenue data found for the selected time period in the business_revenue table.'\n    ELSE\n      t.country || ' generated the highest revenue with ' || t.revenue || ' (' || p.time_period || ').'\n  END AS insight,\n  a.labels AS chart_labels,\n  a.values AS chart_values,\n  a.ranking\nFROM periods p\nCROSS JOIN agg a\nLEFT JOIN top_row t ON true;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1584,
+        2048
+      ],
+      "id": "83ba05c6-4748-49aa-af3a-d707b8d429f0",
+      "name": "SQL - Top Revenue Country"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH params AS (\n  SELECT '{{ $('On form submission').item.json['Time Period'] }}'::text AS time_period\n),\nref AS (\n  SELECT max(ticket_date)::date AS ref_date\n  FROM public.customer_support_tickets\n),\nperiods AS (\n  SELECT\n    p.time_period,\n    r.ref_date,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN r.ref_date\n      WHEN p.time_period = 'Last Week' THEN r.ref_date - 6\n      WHEN p.time_period = 'Last month' THEN r.ref_date - 29\n      ELSE NULL\n    END::date AS start_date,\n    CASE\n      WHEN p.time_period IN ('Yesterday', 'Last Week', 'Last month') THEN r.ref_date\n      ELSE NULL\n    END::date AS end_date\n  FROM params p\n  CROSS JOIN ref r\n),\nranked AS (\n  SELECT\n    cst.country,\n    round(avg(cst.rating), 2)::numeric AS average_rating,\n    count(*)::int AS rated_tickets\n  FROM public.customer_support_tickets cst\n  CROSS JOIN periods p\n  WHERE\n    cst.rating IS NOT NULL\n    AND (\n      p.time_period = 'All data'\n      OR cst.ticket_date BETWEEN p.start_date AND p.end_date\n    )\n  GROUP BY cst.country\n),\nordered_ranked AS (\n  SELECT *\n  FROM ranked\n  ORDER BY average_rating ASC, rated_tickets DESC, country ASC\n),\nagg AS (\n  SELECT\n    count(*) AS row_count,\n    COALESCE(to_jsonb(array_agg(country ORDER BY average_rating ASC, rated_tickets DESC, country ASC)), '[]'::jsonb) AS labels,\n    COALESCE(to_jsonb(array_agg(average_rating ORDER BY average_rating ASC, rated_tickets DESC, country ASC)), '[]'::jsonb) AS values,\n    COALESCE(\n      jsonb_agg(\n        jsonb_build_object(\n          'country', country,\n          'average_rating', average_rating,\n          'rated_tickets', rated_tickets\n        )\n        ORDER BY average_rating ASC, rated_tickets DESC, country ASC\n      ),\n      '[]'::jsonb\n    ) AS ranking\n  FROM ordered_ranked\n),\nbottom_row AS (\n  SELECT country, average_rating\n  FROM ordered_ranked\n  LIMIT 1\n)\nSELECT\n  CASE WHEN a.row_count = 0 THEN 'no_data' ELSE NULL END AS status,\n  'customer_support_tickets' AS source_table,\n  'Customer satisfaction by country' AS analysis,\n  'Average Rating by Country' AS title,\n  'bar' AS chart_type,\n  'Average Rating' AS metric_label,\n  p.time_period,\n  CASE\n    WHEN a.row_count = 0 THEN\n      'No customer ratings found for the selected time period in the customer_support_tickets table.'\n    ELSE\n      b.country || ' has the lowest customer satisfaction with an average rating of ' || b.average_rating || ' (' || p.time_period || ').'\n  END AS insight,\n  a.labels AS chart_labels,\n  a.values AS chart_values,\n  a.ranking\nFROM periods p\nCROSS JOIN agg a\nLEFT JOIN bottom_row b ON true;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1584,
+        2224
+      ],
+      "id": "f1e0b029-d70c-4976-8aaf-d68299cc3889",
+      "name": "SQL - Lowest Rated Country"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH params AS (\n  SELECT '{{ $('On form submission').item.json['Time Period'] }}'::text AS time_period\n),\nref AS (\n  SELECT max(ticket_date)::date AS ref_date\n  FROM public.customer_support_tickets\n),\nperiods AS (\n  SELECT\n    p.time_period,\n    r.ref_date,\n    CASE\n      WHEN p.time_period = 'Yesterday' THEN r.ref_date\n      WHEN p.time_period = 'Last Week' THEN r.ref_date - 6\n      WHEN p.time_period = 'Last month' THEN r.ref_date - 29\n      ELSE NULL\n    END::date AS start_date,\n    CASE\n      WHEN p.time_period IN ('Yesterday', 'Last Week', 'Last month') THEN r.ref_date\n      ELSE NULL\n    END::date AS end_date\n  FROM params p\n  CROSS JOIN ref r\n),\nranked AS (\n  SELECT\n    cst.category,\n    count(*)::int AS tickets,\n    count(*) FILTER (WHERE cst.status IN ('Open', 'In Progress'))::int AS unresolved,\n    count(*) FILTER (WHERE cst.priority IN ('High', 'Critical'))::int AS serious_priority,\n    (\n      count(*)\n      + count(*) FILTER (WHERE cst.status IN ('Open', 'In Progress'))\n      + count(*) FILTER (WHERE cst.priority IN ('High', 'Critical'))\n    )::int AS problem_score\n  FROM public.customer_support_tickets cst\n  CROSS JOIN periods p\n  WHERE\n    p.time_period = 'All data'\n    OR cst.ticket_date BETWEEN p.start_date AND p.end_date\n  GROUP BY cst.category\n),\nordered_ranked AS (\n  SELECT *\n  FROM ranked\n  ORDER BY problem_score DESC, unresolved DESC, serious_priority DESC, category ASC\n),\nagg AS (\n  SELECT\n    count(*) AS row_count,\n    COALESCE(to_jsonb(array_agg(category ORDER BY problem_score DESC, unresolved DESC, serious_priority DESC, category ASC)), '[]'::jsonb) AS labels,\n    COALESCE(to_jsonb(array_agg(problem_score ORDER BY problem_score DESC, unresolved DESC, serious_priority DESC, category ASC)), '[]'::jsonb) AS values,\n    COALESCE(\n      jsonb_agg(\n        jsonb_build_object(\n          'category', category,\n          'tickets', tickets,\n          'unresolved', unresolved,\n          'serious_priority', serious_priority,\n          'problem_score', problem_score\n        )\n        ORDER BY problem_score DESC, unresolved DESC, serious_priority DESC, category ASC\n      ),\n      '[]'::jsonb\n    ) AS ranking\n  FROM ordered_ranked\n),\ntop_row AS (\n  SELECT category, problem_score\n  FROM ordered_ranked\n  LIMIT 1\n)\nSELECT\n  CASE WHEN a.row_count = 0 THEN 'no_data' ELSE NULL END AS status,\n  'customer_support_tickets' AS source_table,\n  'Problem categories' AS analysis,\n  'Customer Support Problem Areas' AS title,\n  'bar' AS chart_type,\n  'Problem Score' AS metric_label,\n  p.time_period,\n  CASE\n    WHEN a.row_count = 0 THEN\n      'No customer support data found for the selected time period in the customer_support_tickets table.'\n    ELSE\n      t.category || ' appears to be the biggest support problem area with a problem score of ' || t.problem_score || ' (' || p.time_period || ').'\n  END AS insight,\n  a.labels AS chart_labels,\n  a.values AS chart_values,\n  a.ranking\nFROM periods p\nCROSS JOIN agg a\nLEFT JOIN top_row t ON true;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1584,
+        2432
+      ],
+      "id": "1c2f9170-8fdc-4933-bf1f-619ce8761153",
+      "name": "SQL - Top Problem Category"
+    },
+    {
+      "parameters": {
+        "content": "Runs predefined SQL queries against Supabase/Postgres tables. Aggregation happens in SQL, not in n8n code.",
+        "width": 208,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        1664
+      ],
+      "id": "75dc1b06-40a5-4671-b039-aad9bc24684c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "User Input\n\nCollects the analysis area, business question, time period, and recipient email.",
+        "height": 128,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        432,
+        2112
+      ],
+      "id": "2eda80f6-07db-4956-8c0b-7d154fda5da8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Question Routing\n\nRoutes the request to the correct SQL analysis based on the selected area and question.",
+        "height": 112,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        976,
+        1792
+      ],
+      "id": "6b1f9701-ba6d-4845-834e-03da62ef32ca",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Chart Preparation\n\nTransforms the SQL result into a QuickChart-compatible chart configuration.",
+        "height": 144,
+        "width": 256,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2304,
+        1808
+      ],
+      "id": "9036b393-a6b6-4b19-bd63-ed6cab86825e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "AI Executive Summary\n\nUses OpenAI to turn the structured KPI result into a concise manager-friendly insight.",
+        "height": 144,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2640,
+        1808
+      ],
+      "id": "0bb9dc3a-5918-4372-94d7-9804ed648e40",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Email Delivery\n\nSends the chart and executive summary to the selected recipient.",
+        "height": 128,
+        "width": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2992,
+        1824
+      ],
+      "id": "f508227b-2833-416d-9a7f-0ceada90bb05",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Executive Insight Flow \n\nThis workflow automates the analysis of executive KPIs from Supabase data. A user selects a business question via a form; the workflow runs an approved SQL query, generates a chart, creates an AI-generated executive summary, and emails the results.",
+        "height": 240,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        432,
+        1536
+      ],
+      "id": "e1545c69-afd6-42bb-bd76-abd1ddae937d",
+      "name": "Sticky Note6"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Route by Analysis Area",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Analysis Area": {
+      "main": [
+        [
+          {
+            "node": "Route Business Question",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route Support Question",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unhandled Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Business Question": {
+      "main": [
+        [
+          {
+            "node": "SQL - Revenue Trend",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SQL - Top Revenue Country",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unhandled Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Support Question": {
+      "main": [
+        [
+          {
+            "node": "SQL - Lowest Rated Country",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SQL - Top Problem Category",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Unhandled Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Chart Config": {
+      "main": [
+        [
+          {
+            "node": "Check For Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check For Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Chart Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send No-Data Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Chart Image": {
+      "main": [
+        [
+          {
+            "node": "Write Executive Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Executive Summary": {
+      "main": [
+        [
+          {
+            "node": "Send Insight Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Write Executive Summary",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unhandled Selection": {
+      "main": [
+        [
+          {
+            "node": "Send Unhandled Selection Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL - Revenue Trend": {
+      "main": [
+        [
+          {
+            "node": "Build Chart Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL - Top Revenue Country": {
+      "main": [
+        [
+          {
+            "node": "Build Chart Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL - Lowest Rated Country": {
+      "main": [
+        [
+          {
+            "node": "Build Chart Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL - Top Problem Category": {
+      "main": [
+        [
+          {
+            "node": "Build Chart Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
