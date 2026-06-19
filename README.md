@@ -18,12 +18,6 @@ To try a workflow, download its JSON file and import it into your n8n instance.
 You may need to configure credentials, environment variables, integrations, and
 other settings for your own environment before activating it.
 
-## Security
-
-Credentials and secrets are not included in the workflow exports. Always review
-a workflow before importing it, use appropriately restricted credentials, and
-avoid committing API keys, passwords, or other sensitive information.
-
 ## Disclaimer
 
 These workflows are shared for documentation, learning, and inspiration. Test
